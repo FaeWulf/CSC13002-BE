@@ -87,6 +87,7 @@ MATKHAU CHAR(100),
 LOAITK INT -- 1. GIÁO VỤ 2. GIÁO VIÊN
 )
 GO
+select * from khoi
 
 INSERT INTO KHOI(MAKHOI,TENKHOI,SOLUONG)
 VALUES('KH010','Khối 10',3),('KH011','Khối 11',3),('KH012','Khối 12',3)
@@ -106,19 +107,90 @@ VALUES('MH001','Toán'),
 ('MH009','Thể dục')
 
 insert into LOP(MALOP,TENLOP,SISO,MAKHOI)
-values('L10A1','10A1',null,'KH010'),
-('L10A2','10A2',null,'KH010'),
-('L10A3','10A3',null,'KH010'),
-('L11A1','11A1',null,'KH011'),
-('L11A2','11A2',null,'KH011'),
-('L11A3','11A3',null,'KH011'),
-('L12A1','12A1',null,'KH012'),
-('L12A2','12A2',null,'KH012'),
-('L12A3','12A3',null,'KH012')
+values('L10A1','10A1',0,'KH010'),
+('L10A2','10A2',0,'KH010'),
+('L10A3','10A3',0,'KH010'),
+('L11A1','11A1',0,'KH011'),
+('L11A2','11A2',0,'KH011'),
+('L11A3','11A3',0,'KH011'),
+('L12A1','12A1',0,'KH012'),
+('L12A2','12A2',0,'KH012'),
+('L12A3','12A3',0,'KH012')
 
 insert into LOAIKT(MAKT,TENKT)
 values('KT001','KT15p'),('KT002','KT 1 tiết'),('KT003','KT Học Kỳ')
+go
 
+create proc ThemHS @hoten nvarchar(40), @gioitinh nvarchar(5), @ngaysinh date, @diachi nvarchar(40), @email nvarchar(20), @malop char(5)
+as
+begin
+	declare @mahs char(5)
+	declare @count int
+	select @count = count(*) from HOCSINH
+	set @count = @count + 1
+	set @mahs = 'HS' + ltrim(str(@count,10))
+	insert into HOCSINH(MAHS,HOTEN,GIOITINH,NGAYSINH,DIACHI,EMAIL,MALOP)
+	values(@mahs,@hoten,@gioitinh,@ngaysinh,@diachi,@email,@malop)
+
+	update LOP
+	set SISO = SISO + 1
+	where MALOP = @malop
+end
+go
+
+create proc XoaHS @mahs char(5)
+as
+begin
+	declare @malop char(5)
+	select @malop = L.MALOP from LOP L, HOCSINH HS where L.MALOP = HS.MALOP and HS.MAHS = @mahs
+	delete from HOCSINH where MAHS = @mahs
+	update LOP
+	set SISO = SISO - 1
+	where MALOP = @malop
+end
+go
+
+create proc XoaHS @mahs char(5), @hoten nvarchar(40), @gioitinh nvarchar(5), @ngaysinh date, @diachi nvarchar(40), @email nvarchar(20), @malop char(5)
+as
+begin
+update HOCSINH
+set HOTEN = @hoten, GIOITINH = @gioitinh, NGAYSINH=@ngaysinh,DIACHI=@diachi,EMAIL=@email,MALOP=@malop
+where MAHS = @mahs
+end
+go
+
+create proc ThemLop @malop char(5), @tenlop nvarchar(10), @makhoi char(5)
+as
+begin
+insert into LOP(MALOP,TENLOP,SISO,MAKHOI)
+values(@malop,@tenlop,0,@makhoi)
+update KHOI
+set SOLUONG = SOLUONG + 1
+where MAKHOI = @makhoi
+end
+go
+
+create proc XoaLop @malop char(5)
+as
+begin
+declare @makhoi char(5)
+select @makhoi = MAKHOI from LOP where MALOP=@malop
+delete from LOP where MALOP=@malop
+update KHOI
+set SOLUONG = SOLUONG - 1
+where MAKHOI=@makhoi
+end
+go
+
+
+create proc TracuuHS @mahs char(5)
+as
+begin
+	select * from HOCSINH where MAHS = @mahs
+end
+go
+
+print YEAR(GETDATE()) - YEAR('1/1/2000')
 
 ------------Tạo ràng buộc-----------------
 ALTER TABLE HOCSINH
@@ -129,3 +201,46 @@ ADD CONSTRAINT QD_LOP CHECK(SISO<=40)
 
 ALTER TABLE KHOI
 ADD CONSTRAINT QD_KHOI CHECK(SOLUONG=3)
+GO
+
+create TRIGGER QD_TUOI
+ON HOCSINH
+FOR INSERT, UPDATE
+AS
+	BEGIN
+		IF(EXISTS( SELECT * FROM inserted I WHERE YEAR(GETDATE()) - YEAR(I.NGAYSINH) >=15 AND (YEAR(GETDATE()) - YEAR(I.NGAYSINH)) <= 20))
+			BEGIN
+				RAISERROR(N'Độ tuổi sai quy định',16,1)
+				rollback
+			end
+	end
+go
+
+create trigger QD_LOP
+ON LOP
+for update
+as
+	begin
+		if(exists(select * from inserted I where I.SISO>40))
+			begin
+				raiserror(N'Sỉ số vượt quá qui định',16,1)
+				rollback
+			end
+	end
+go
+
+create trigger QD_KHOI
+ON KHOI
+for update
+as
+	begin
+		if(exists( Select * from inserted I where I.SOLUONG>3))
+			begin
+				raiserror(N'Số lượng lớp vượt quá qui định',16,1)
+				rollback
+			end
+	end
+go
+
+
+------------Thay đổi quy định------------------
