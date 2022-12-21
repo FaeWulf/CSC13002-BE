@@ -28,8 +28,8 @@ module.exports = {
   },
 
   updateById: async (MALOP, TENLOP, SISO, MAKHOI) => {
-    const rs = await db.query('UPDATE hocsinh SET MALOP=$1, TENLOP=$2, SISO=$3, MAKHOI=$4 WHERE MAHS=$5',
-      [MALOP, TENLOP, SISO, MAKHOI]
+    const rs = await db.query('UPDATE lop SET TENLOP=$1, SISO=$2, MAKHOI=$3 WHERE MALOP=$4',
+      [TENLOP, SISO, MAKHOI, MALOP]
     )
     return rs
   },

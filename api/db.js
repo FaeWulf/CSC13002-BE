@@ -4,7 +4,7 @@ const pgp = require('pg-promise')(initOptions)
 const cn = (
   {
     host: process.env.DB_HOST || 'db.faewulf.xyz',
-    user: process.env.DB_USER || 'faewulf',
+    user: process.env.DB_USER || 'postgres',
     port: process.env.DB_PORT || 2204,
     password: 'youshallnotpass',
     database: 'postgres',
