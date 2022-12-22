@@ -1,5 +1,10 @@
 const db = require('../db.js')
 
+const pgp = require('pg-promise')({
+  capSQL: true // capitalize all generated SQL
+});
+const { str, int } = require('../../modules/setType')
+
 module.exports = {
   all: async () => {
     const rs = await db.any('SELECT * FROM chitietdiem')
@@ -21,15 +26,25 @@ module.exports = {
   },
 
   updateById: async (MADIEMKT, MAKT, DIEMKT) => {
-    const rs = await db.query('UPDATE chitietdiem SET MAKT=$1, DIEMKT=$2 WHERE MADIEMKT=$3',
-      [MAKT, DIEMKT, MADIEMKT]
-    )
-    return rs
+    const csGeneric = new pgp.helpers.ColumnSet([
+      str('makt'), int("diemkt")
+    ], { table: 'chitietdiem' });
+
+    //should care about sql injection"
+    const update = pgp.helpers.update({ "makt": MAKT, "diemkt": DIEMKT }, csGeneric);
+
+    try {
+      await db.none(update + ' WHERE MADIEMKT=$1', String(MADIEMKT));
+      return { status: "done" }
+    } catch (err) {
+      console.log("[db chitietdiem] ", err)
+      return null;
+    }
   },
 
   deleteById: async MADIEMKT => {
     const rs = await db.query('DELETE FROM chitietdiem WHERE MADIEMKT=$1',
-      [MADIEMKT]
+      [String(MADIEMKT)]
     )
     return rs
   }

@@ -1,4 +1,9 @@
 const db = require('../db.js')
+const pgp = require('pg-promise')({
+  capSQL: true // capitalize all generated SQL
+});
+
+const { str } = require('../../modules/setType')
 
 module.exports = {
   all: async () => {
@@ -28,15 +33,26 @@ module.exports = {
   },
 
   updateById: async (MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP) => {
-    const rs = await db.query('UPDATE hocsinh SET HOTEN=$1, GIOITINH=$2, NGAYSINH=$3, DIACHI=$4, EMAIL=$5, MALOP=$6 WHERE MAHS=$7',
-      [HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP, MAHS]
-    )
-    return rs
+
+    const csGeneric = new pgp.helpers.ColumnSet([
+      str('hoten'), str("gioitinh"), str("ngaysinh"), str("diachi"), str("email"), str("malop")
+    ], { table: 'hocsinh' });
+
+    //should care about sql injection"
+    const update = pgp.helpers.update({ "hoten": HOTEN, "gioitinh": GIOITINH, 'ngaysinh': NGAYSINH, "diachi": DIACHI, "email": EMAIL, "malop": MALOP }, csGeneric);
+
+    try {
+      await db.none(update + ' WHERE MAHS=$1', String(MAHS));
+      return { status: "done" }
+    } catch (err) {
+      console.log("[db hocsinh] ", err)
+      return null;
+    }
   },
 
   deleteById: async MAHS => {
     const rs = await db.query('DELETE FROM hocsinh WHERE MAHS=$1',
-      [MAHS]
+      [String(MAHS)]
     )
     return rs
   }

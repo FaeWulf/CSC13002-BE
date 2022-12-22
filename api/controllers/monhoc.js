@@ -1,5 +1,11 @@
 const db = require('../db.js')
 
+const pgp = require('pg-promise')({
+  capSQL: true // capitalize all generated SQL
+});
+
+const { str } = require('../../modules/setType')
+
 module.exports = {
   all: async () => {
     const rs = await db.any('SELECT * FROM monhoc')
@@ -29,14 +35,14 @@ module.exports = {
 
   updateById: async (MAMH, TENMH) => {
     const rs = await db.query('UPDATE monhoc SET TENMH=$1 WHERE MAMH=$2',
-      [TENMH, MAMH]
+      [TENMH, String(MAMH)]
     )
     return rs
   },
 
   deleteById: async MAMH => {
     const rs = await db.query('DELETE FROM monhoc WHERE MAMH=$1',
-      [MAMH]
+      [String(MAMH)]
     )
     return rs
   }

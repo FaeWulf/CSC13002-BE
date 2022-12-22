@@ -1,15 +1,15 @@
 const express = require('express')
 const router = express.Router()
 
-const hocsinh = require('../controllers/hocsinh')
+const hocki = require('../controllers/hocki')
 
-router.get("/hocsinh/search", async (req, res) => {
+router.get("/hocki/search", async (req, res) => {
   let data = null
   if (req.query.id)
-    data = await hocsinh.byId(String(req.query.id))
+    data = await hocki.byId(String(req.query.id))
 
   if (req.query.name)
-    data = await hocsinh.byName(String(req.query.name))
+    data = await hocki.byName(String(req.query.name))
 
   let back = {}
   back.status = "ok"
@@ -19,10 +19,9 @@ router.get("/hocsinh/search", async (req, res) => {
     back.status = "notfound"
 
   return res.json(back)
-
 })
 
-router.get("/hocsinh/create", async (req, res) => {
+router.get("/hocki/create", async (req, res) => {
   let data = null
 
   let back = {}
@@ -32,8 +31,8 @@ router.get("/hocsinh/create", async (req, res) => {
   try {
     if (req.query.data) {
       //console.log(req.query.data)
-      let { MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP } = JSON.parse(req.query.data)
-      data = await hocsinh.add(MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP)
+      let { MAHK, TENHK } = JSON.parse(req.query.data)
+      data = await hocki.add(MAHK, TENHK)
     }
 
     back.data = data
@@ -43,13 +42,13 @@ router.get("/hocsinh/create", async (req, res) => {
   }
   catch (err) {
     back.status = err
-    console.log("[hocsinh] create try failed \n", err)
+    console.log("[hocki] create try failed \n", err)
   }
 
   return res.json(back)
 })
 
-router.get("/hocsinh/update", async (req, res) => {
+router.get("/hocki/update", async (req, res) => {
   let data = null
 
   let back = {}
@@ -59,8 +58,8 @@ router.get("/hocsinh/update", async (req, res) => {
   try {
     if (req.query.data) {
       //console.log(req.query.data)
-      let { MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP } = JSON.parse(req.query.data)
-      data = await hocsinh.updateById(MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP)
+      let { MAHK, TENHK } = JSON.parse(req.query.data)
+      data = await hocki.updateById(MAHK, TENHK)
     }
 
     back.data = data
@@ -70,13 +69,13 @@ router.get("/hocsinh/update", async (req, res) => {
   }
   catch (err) {
     back.status = err
-    console.log("[hocsinh] update try failed \n", err)
+    console.log("[hocki] update try failed \n", err)
   }
 
   return res.json(back)
 })
 
-router.get("/hocsinh/delete", async (req, res) => {
+router.get("/hocki/delete", async (req, res) => {
   let data = null
 
   let back = {}
@@ -85,7 +84,7 @@ router.get("/hocsinh/delete", async (req, res) => {
 
   try {
     if (req.query.id) {
-      data = await hocsinh.deleteById(req.query.id)
+      data = await hocki.deleteById(req.query.id)
     }
 
     back.data = data
@@ -95,14 +94,14 @@ router.get("/hocsinh/delete", async (req, res) => {
   }
   catch (err) {
     back.status = err
-    console.log("[hocsinh] delete try failed \n", err)
+    console.log("[hocki] delete try failed \n", err)
   }
 
   return res.json(back)
 })
 
-router.get("/hocsinh/all", async (req, res) => {
-  const temp = await hocsinh.all()
+router.get("/hocki/all", async (req, res) => {
+  const temp = await hocki.all()
   res.json({
     status: "ok",
     data: temp
