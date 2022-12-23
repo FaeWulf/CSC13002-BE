@@ -13,7 +13,7 @@ module.exports = {
 
   add: async (MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP) => {
     const rs = await db.one('INSERT INTO hocsinh(MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP]
+      [String(MAHS), HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP]
     )
     return rs
   },
@@ -27,7 +27,7 @@ module.exports = {
 
   byId: async (MAHS) => {
     const rs = await db.oneOrNone('SELECT * FROM hocsinh WHERE MAHS=$1',
-      [MAHS]
+      [String(MAHS)]
     )
     return rs
   },

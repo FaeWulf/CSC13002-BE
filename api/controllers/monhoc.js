@@ -14,7 +14,7 @@ module.exports = {
 
   add: async (MAMH, TENMH) => {
     const rs = await db.one('INSERT INTO monhoc(MAMH, TENMH) VALUES($1, $2) RETURNING *',
-      [MAMH, TENMH]
+      [String(MAMH), TENMH]
     )
     return rs
   },
@@ -28,7 +28,7 @@ module.exports = {
 
   byId: async (MAMH) => {
     const rs = await db.oneOrNone('SELECT * FROM monhoc WHERE MAMH=$1',
-      [MAMH]
+      [String(MAMH)]
     )
     return rs
   },

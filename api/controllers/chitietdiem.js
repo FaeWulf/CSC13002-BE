@@ -13,14 +13,14 @@ module.exports = {
 
   add: async (MADIEMKT, MAKT, DIEMKT) => {
     const rs = await db.one('INSERT INTO chitietdiem(MADIEMKT, MAKT, DIEMKT) VALUES($1, $2, $3) RETURNING *',
-      [MADIEMKT, MAKT, DIEMKT]
+      [String(MADIEMKT), String(MAKT), DIEMKT]
     )
     return rs
   },
 
   byId: async (MADIEMKT) => {
     const rs = await db.oneOrNone('SELECT * FROM chitietdiem WHERE MADIEMKT=$1',
-      [MADIEMKT]
+      [String(MADIEMKT)]
     )
     return rs
   },

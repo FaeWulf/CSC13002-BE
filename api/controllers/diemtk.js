@@ -13,7 +13,7 @@ module.exports = {
 
   add: async (MADIEMTK, DIEMTK, MAHK, MAMH, MAHS) => {
     const rs = await db.one('INSERT INTO diemtk(MADIEMTK, DIEMTK, MAHK, MAMH, MAHS) VALUES($1, $2, $3, $4, $5) RETURNING *',
-      [MADIEMTK, DIEMTK, MAHK, MAMH, MAHS]
+      [String(MADIEMTK), DIEMTK, String(MAHK), String(MAMH), String(MAHS)]
     )
     return rs
   },

@@ -20,14 +20,14 @@ module.exports = {
 
   byName: async (TENLOP) => {
     const rs = await db.oneOrNone('SELECT * FROM lop WHERE TENLOP=$1',
-      [TENLOP]
+      [String(TENLOP)]
     )
     return rs
   },
 
   byId: async (MALOP) => {
     const rs = await db.oneOrNone('SELECT * FROM lop WHERE MALOP=$1',
-      [MAHS]
+      [String(MAHS)]
     )
     return rs
   },

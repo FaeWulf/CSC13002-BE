@@ -14,14 +14,14 @@ module.exports = {
 
   add: async (MAKHOI, TENKHOI, SOLUONG) => {
     const rs = await db.one('INSERT INTO khoi(MAKHOI, TENKHOI, SOLUONG) VALUES($1, $2, $3) RETURNING *',
-      [MAKHOI, TENKHOI, SOLUONG]
+      [String(MAKHOI), TENKHOI, SOLUONG]
     )
     return rs
   },
 
   byId: async (MAKHOI) => {
     const rs = await db.oneOrNone('SELECT * FROM khoi WHERE MAKHOI=$1',
-      [MAKHOI]
+      [String(MAKHOI)]
     )
     return rs
   },

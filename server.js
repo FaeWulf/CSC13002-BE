@@ -1,16 +1,17 @@
 const express = require('express')
 const fs = require('fs')
+const cors = require('cors')
 
 //config
 let port = process.env.PORT || 3000
 let routesPath = './api/routes/'
-
 
 //body
 
 let app = express()
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+app.use(cors())
 
 fs.readdirSync(routesPath).forEach(E => {
   try {
