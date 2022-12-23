@@ -21,7 +21,7 @@ module.exports = {
 
   byName: async (TENMH) => {
     const rs = await db.oneOrNone('SELECT * FROM monhoc WHERE TENMH=$1',
-      [TENMH]
+      [String(TENMH)]
     )
     return rs
   },

@@ -2,7 +2,7 @@ function str(column) {
   return {
     name: column,
     skip: c => {
-      return c.value === null || c.value === undefined
+      return c.value === undefined
     }
   };
 }
@@ -10,7 +10,7 @@ function str(column) {
 function int(column) {
   return {
     name: column,
-    skip: c => c.value === null || c.value === undefined,
+    skip: c => c.value === undefined,
     init: c => +c.value
   };
 }
