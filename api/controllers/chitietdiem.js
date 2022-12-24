@@ -26,20 +26,16 @@ module.exports = {
   },
 
   updateById: async (MADIEMKT, MAKT, DIEMKT) => {
-    const csGeneric = new pgp.helpers.ColumnSet([
-      str('makt'), int("diemkt")
-    ], { table: 'chitietdiem' });
-
-    //should care about sql injection"
-    const update = pgp.helpers.update({ "makt": MAKT, "diemkt": DIEMKT }, csGeneric);
-
+    let rs = null
     try {
-      await db.none(update + ' WHERE MADIEMKT=$1', String(MADIEMKT));
-      return { status: "done" }
+      rs = await db.query('UPDATE chitietdiem SET DIEMKT=$1 WHERE MADIEMKT=$2 AND MAKT=$3',
+        [DIEMKT, String(MADIEMKT), String(MAKT)]
+      )
     } catch (err) {
       console.log("[db chitietdiem] ", err)
       return null;
     }
+    return rs
   },
 
   deleteById: async MADIEMKT => {

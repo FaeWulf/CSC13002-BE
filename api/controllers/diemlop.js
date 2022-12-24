@@ -28,7 +28,7 @@ WHERE d.mahs=$1 AND d.mamh=$2 AND d.mahk=$3
       if (tt) {
         tt.chitietdiem = []
         const chitietdiem = await db.any(`
-SELECT d.mamh, l.tenkt, c.diemkt 
+SELECT d.mamh, l.makt, l.tenkt, c.diemkt 
 FROM chitietdiem c 
 join diemtk d on d.madiemtk = c.madiemkt  
 join loaikt l on l.makt = c.makt 
