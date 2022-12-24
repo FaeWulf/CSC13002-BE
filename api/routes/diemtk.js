@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const diemtk = require('../controllers/diemtk')
+const chitietdiem = require('../controllers/chitietdiem')
 
 router.get("/diemtk/search", async (req, res) => {
   let data = null
@@ -33,6 +34,15 @@ router.get("/diemtk/create", async (req, res) => {
       //console.log(req.query.data)
       let { MADIEMTK, DIEMTK, MAHK, MAMH, MAHS } = JSON.parse(req.query.data)
       data = await diemtk.add(MADIEMTK, DIEMTK, MAHK, MAMH, MAHS)
+
+      if (data) {
+        const loaikts = await db.manyOrNone(`SELECT makt FROM loaikt`)
+        for (let i = 0; i < loaikts.length; i++) {
+          await chitietdiem.add(MADIEMTK, loaikts[i].makt, null)
+          //console.log(loaikts[i].makt)
+        }
+      }
+
     }
 
     back.data = data

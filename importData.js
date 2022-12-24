@@ -8,6 +8,16 @@ let stt = 17
 let stt_max = 310
 let hk = "HK002"
 
+async function temp() {
+  const loaikts = await db.manyOrNone(`SELECT makt FROM loaikt`)
+  const MADIEMKT = 'DT311'
+  for (let i = 0; i < loaikts.length; i++) {
+    await chitietdiem.add(MADIEMKT, loaikts[i].makt, null)
+    //console.log(loaikts[i].makt)
+  }
+}
+temp()
+
 /*
 for (let i = 1; i < 22; i++) {
   for (let mh = 1; mh <= 7; mh++) {
