@@ -12,10 +12,16 @@ module.exports = {
   },
 
   add: async (MADIEMTK, DIEMTK, MAHK, MAMH, MAHS) => {
-    const rs = await db.one('INSERT INTO diemtk(MADIEMTK, DIEMTK, MAHK, MAMH, MAHS) VALUES($1, $2, $3, $4, $5) RETURNING *',
-      [String(MADIEMTK), DIEMTK, String(MAHK), String(MAMH), String(MAHS)]
-    )
-    return rs
+    try {
+      const rs = await db.one('INSERT INTO diemtk(MADIEMTK, DIEMTK, MAHK, MAMH, MAHS) VALUES($1, $2, $3, $4, $5) RETURNING *',
+        [String(MADIEMTK), DIEMTK, String(MAHK), String(MAMH), String(MAHS)]
+      )
+      return rs
+    }
+    catch (err) {
+      console.log('[diemtk] err', err)
+      return null
+    }
   },
 
   byId: async (MADIEMTK) => {
@@ -48,5 +54,20 @@ module.exports = {
       [String(MADIEMTK)]
     )
     return rs
+  },
+
+  max: async () => {
+    try {
+      const rs = await db.query(`select madiemtk
+FROM diemtk
+ORDER BY madiemtk desc
+limit 1;`)
+
+      return rs
+    }
+    catch (err) {
+      console.log('[diemtk] err', err)
+      return null
+    }
   }
 }

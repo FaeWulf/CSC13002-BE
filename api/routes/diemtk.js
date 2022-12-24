@@ -108,4 +108,12 @@ router.get("/diemtk/all", async (req, res) => {
   })
 })
 
+router.get("/diemtk/max", async (req, res) => {
+  const temp = await diemtk.max()
+  res.json({
+    status: "ok",
+    data: temp
+  })
+})
+
 module.exports = router
