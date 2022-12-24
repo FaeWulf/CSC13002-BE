@@ -10,8 +10,6 @@ router.get("/diemtheolop/search", async (req, res) => {
   let MAHK = req.query.MAHK
   let MALOP = req.query.MALOP
 
-  console.log(MAMH, MALOP, MAHK)
-
   let back = {}
   back.status = "ok"
   back.data = data
@@ -26,7 +24,6 @@ router.get("/diemtheolop/search", async (req, res) => {
     MAHK = String(MAHK)
     MAMH = String(MAMH)
     data = await query.query(MALOP, MAMH, MAHK)
-    console.log(data)
     back.data = data
   }
   catch (err) {

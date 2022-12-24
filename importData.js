@@ -34,7 +34,6 @@ for (let i = stt; i <= stt_max; i++) {
   })
 
 }
-*/
 
 const malop = 'L12A2'
 const mamh = 'MH001'
@@ -80,3 +79,4 @@ where d.madiemtk=$1`,
 }
 
 temp()
+*/

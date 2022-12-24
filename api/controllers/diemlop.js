@@ -35,8 +35,10 @@ join loaikt l on l.makt = c.makt
 where d.madiemtk=$1`,
           [String(tt.madiemtk)])
 
-        tt.chitietdiem.push(chitietdiem)
+        tt.chitietdiem = chitietdiem
 
+        tt.chitietdiem.sort((a, b) => (a.makt > b.makt) ? 1 : ((b.makt > a.makt) ? -1 : 0))
+        console.log(tt.chitietdiem)
         result.push(tt)
       }
     }
