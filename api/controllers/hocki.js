@@ -7,10 +7,16 @@ module.exports = {
   },
 
   add: async (MAHK, TENHK) => {
-    const rs = await db.one('INSERT INTO hocki(MAHK, TENHK) VALUES($1, $2) RETURNING *',
-      [String(MAHK), TENHK]
-    )
-    return rs
+    try {
+      const rs = await db.one('INSERT INTO hocki(MAHK, TENHK) VALUES($1, $2) RETURNING *',
+        [String(MAHK), TENHK]
+      )
+      return rs
+    }
+    catch (err) {
+      console.log('[hocki] err', err)
+      return null
+    }
   },
 
   byName: async (TENHK) => {

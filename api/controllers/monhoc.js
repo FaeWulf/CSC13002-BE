@@ -13,10 +13,16 @@ module.exports = {
   },
 
   add: async (MAMH, TENMH) => {
-    const rs = await db.one('INSERT INTO monhoc(MAMH, TENMH) VALUES($1, $2) RETURNING *',
-      [String(MAMH), TENMH]
-    )
-    return rs
+    try {
+      const rs = await db.one('INSERT INTO monhoc(MAMH, TENMH) VALUES($1, $2) RETURNING *',
+        [String(MAMH), TENMH]
+      )
+      return rs
+    }
+    catch (err) {
+      console.log('[monhoc] err', err)
+      return null
+    }
   },
 
   byName: async (TENMH) => {

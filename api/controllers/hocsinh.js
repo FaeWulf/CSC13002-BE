@@ -12,10 +12,16 @@ module.exports = {
   },
 
   add: async (MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP) => {
-    const rs = await db.one('INSERT INTO hocsinh(MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [String(MAHS), HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP]
-    )
-    return rs
+    try {
+      const rs = await db.one('INSERT INTO hocsinh(MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+        [String(MAHS), HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP]
+      )
+      return rs
+    }
+    catch (err) {
+      console.log('[hocsinh] err', err)
+      return null
+    }
   },
 
   byName: async (HOTEN) => {

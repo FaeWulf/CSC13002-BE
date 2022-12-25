@@ -7,10 +7,16 @@ module.exports = {
   },
 
   add: async (MAKT, TENKT) => {
-    const rs = await db.one('INSERT INTO loaikt(MAKT, TENKT) VALUES($1, $2) RETURNING *',
-      [String(MAKT), TENKT]
-    )
-    return rs
+    try {
+      const rs = await db.one('INSERT INTO loaikt(MAKT, TENKT) VALUES($1, $2) RETURNING *',
+        [String(MAKT), TENKT]
+      )
+      return rs
+    }
+    catch (err) {
+      console.log('[loaikt] err', err)
+      return null
+    }
   },
 
   byName: async (TENKT) => {

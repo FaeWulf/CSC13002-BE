@@ -6,22 +6,38 @@ const db = require('./api/db')
 const { calAge } = require('./modules/calAge')
 
 //MADIEMTK, DIEMTK, MAHK, MAMH, MAHS
-let stt = 17
-let stt_max = 310
-let hk = "HK002"
 
 async function temp() {
+  const madiemtk = await db.manyOrNone(`SELECT madiemtk FROM diemtk`)
 
-  const MALOP = "qwewq"
-  const NGAYSINH = "1900-1-1"
 
-  let tuoimin = await quydinh.byId("QD001")
-  let tuoimax = await quydinh.byId("QD002")
+  for (let i = 0; i < madiemtk.length; i++) {
+    let diems = await db.manyOrNone(`SELECT * FROM chitietdiem WHERE madiemkt=$1`,
+      [String(madiemtk[i].madiemtk)]
+    )
 
-  let age = calAge(NGAYSINH)
-  let sizeOfLop = await lop.size(MALOP)
+    if (diems.length == 0)
+      console.log(madiemtk[i].madiemtk + "==========================")
+    else
+      console.log(madiemtk[i].madiemtk)
 
-  console.log(sizeOfLop)
+
+    let diem15p = diems[diems.findIndex(E => E.makt == "KT001")]?.diemkt ?? 0
+    let diem1tiet = diems[diems.findIndex(E => E.makt == "KT002")]?.diemkt ?? 0
+    let diemcuoiky = diems[diems.findIndex(E => E.makt == "KT003")]?.diemkt ?? 0
+
+    diem15p = isNaN(diem15p) ? 0 : diem15p
+    diem1tiet = isNaN(diem1tiet) ? 0 : diem1tiet
+    diemcuoiky = isNaN(diemcuoiky) ? 0 : diemcuoiky
+
+
+    let result = (diem15p + diem1tiet * 2 + diemcuoiky * 3) / 6
+    result = Math.round((result + Number.EPSILON) * 100) / 100 //round up to 2 decimal
+
+    const rs = await db.query('UPDATE diemtk SET DIEMTK=$1 WHERE MADIEMTK=$2',
+      [result, String(madiemtk[i].madiemtk)]
+    )
+  }
 }
 temp()
 

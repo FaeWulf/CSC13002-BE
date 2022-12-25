@@ -13,10 +13,16 @@ module.exports = {
   },
 
   add: async (MAKHOI, TENKHOI, SOLUONG) => {
-    const rs = await db.one('INSERT INTO khoi(MAKHOI, TENKHOI, SOLUONG) VALUES($1, $2, $3) RETURNING *',
-      [String(MAKHOI), TENKHOI, SOLUONG]
-    )
-    return rs
+    try {
+      const rs = await db.one('INSERT INTO khoi(MAKHOI, TENKHOI, SOLUONG) VALUES($1, $2, $3) RETURNING *',
+        [String(MAKHOI), TENKHOI, SOLUONG]
+      )
+      return rs
+    }
+    catch (err) {
+      console.log('[khoi] err', err)
+      return null
+    }
   },
 
   byId: async (MAKHOI) => {
