@@ -40,6 +40,7 @@ router.get("/hocsinh/create", async (req, res) => {
 
       let tuoimin = await quydinh.byId("QD001")
       let tuoimax = await quydinh.byId("QD002")
+      let sisomax = await quydinh.byId("QD003")
 
       let age = calAge(NGAYSINH)
       let sizeOfLop = await lop.size(MALOP)
@@ -47,11 +48,13 @@ router.get("/hocsinh/create", async (req, res) => {
       if (age && age > tuoimax.value || age < tuoimin.value) {
         data = []
         back.status = "Tuoi vuot qua quy dinh"
+        console.log('a')
       }
       else
         if (sizeOfLop && sizeOfLop > sisomax.value) {
           data = []
           back.status = `Lop ${MALOP} da du si so`
+          console.log('b')
         }
         else
           data = await hocsinh.add(MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP)
