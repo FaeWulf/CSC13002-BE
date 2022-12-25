@@ -49,6 +49,19 @@ module.exports = {
     }
   },
 
+  size: async (MALOP) => {
+    try {
+      const rs = await db.oneOrNone('SELECT COUNT(*) FROM hocsinh WHERE MALOP=$1',
+        [String(MALOP)]
+      )
+      return rs?.count
+    } catch (err) {
+      console.log("[db lop] ", err)
+      return null;
+    }
+
+  },
+
   deleteById: async MALOP => {
     const rs = await db.query('DELETE FROM lop WHERE MAHS=$1',
       [String(MALOP)]

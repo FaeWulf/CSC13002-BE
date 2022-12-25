@@ -2,6 +2,10 @@ const express = require('express')
 const router = express.Router()
 
 const hocsinh = require('../controllers/hocsinh')
+const quydinh = require('../controllers/quydinh')
+
+const { calAge } = require('../../modules/calAge')
+const lop = require('../controllers/lop')
 
 router.get("/hocsinh/search", async (req, res) => {
   let data = null
@@ -33,7 +37,24 @@ router.get("/hocsinh/create", async (req, res) => {
     if (req.query.data) {
       //console.log(req.query.data)
       let { MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP } = JSON.parse(req.query.data)
-      data = await hocsinh.add(MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP)
+
+      let tuoimin = await quydinh.byId("QD001")
+      let tuoimax = await quydinh.byId("QD002")
+
+      let age = calAge(NGAYSINH)
+      let sizeOfLop = await lop.size(MALOP)
+
+      if (age && age > tuoimax.value || age < tuoimin.value) {
+        data = []
+        back.status = "Tuoi vuot qua quy dinh"
+      }
+      else
+        if (sizeOfLop && sizeOfLop > sisomax.value) {
+          data = []
+          back.status = `Lop ${MALOP} da du si so`
+        }
+        else
+          data = await hocsinh.add(MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP)
     }
 
     back.data = data
@@ -60,7 +81,26 @@ router.get("/hocsinh/update", async (req, res) => {
     if (req.query.data) {
       //console.log(req.query.data)
       let { MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP } = JSON.parse(req.query.data)
-      data = await hocsinh.updateById(MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP)
+
+      let tuoimin = await quydinh.byId("QD001")
+      let tuoimax = await quydinh.byId("QD002")
+      let sisomax = await quydinh.byId("QD003")
+
+      let sizeOfLop = await lop.size(MALOP)
+
+      let age = calAge(NGAYSINH)
+
+      if (age && age > tuoimax.value || age < tuoimin.value) {
+        data = []
+        back.status = "Tuoi vuot qua quy dinh"
+      }
+      else
+        if (sizeOfLop && sizeOfLop > sisomax.value) {
+          data = []
+          back.status = `Lop ${MALOP} da du si so`
+        }
+        else
+          data = await hocsinh.updateById(MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP)
     }
 
     back.data = data

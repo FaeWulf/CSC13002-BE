@@ -1,7 +1,9 @@
 const diemtk = require('./api/controllers/diemtk')
-const chitietdiem = require('./api/controllers/chitietdiem')
-const taikhoan = require('./api/controllers/auth')
+const quydinh = require('./api/controllers/quydinh')
+const lop = require('./api/controllers/lop')
 const db = require('./api/db')
+
+const { calAge } = require('./modules/calAge')
 
 //MADIEMTK, DIEMTK, MAHK, MAMH, MAHS
 let stt = 17
@@ -9,12 +11,17 @@ let stt_max = 310
 let hk = "HK002"
 
 async function temp() {
-  const loaikts = await db.manyOrNone(`SELECT makt FROM loaikt`)
-  const MADIEMKT = 'DT311'
-  for (let i = 0; i < loaikts.length; i++) {
-    await chitietdiem.add(MADIEMKT, loaikts[i].makt, null)
-    //console.log(loaikts[i].makt)
-  }
+
+  const MALOP = "qwewq"
+  const NGAYSINH = "1900-1-1"
+
+  let tuoimin = await quydinh.byId("QD001")
+  let tuoimax = await quydinh.byId("QD002")
+
+  let age = calAge(NGAYSINH)
+  let sizeOfLop = await lop.size(MALOP)
+
+  console.log(sizeOfLop)
 }
 temp()
 
