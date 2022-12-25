@@ -3,7 +3,7 @@ const pgp = require('pg-promise')({
   capSQL: true // capitalize all generated SQL
 });
 
-const { str } = require('../../modules/setType')
+const { str, int } = require('../../modules/setType')
 
 module.exports = {
   all: async () => {
