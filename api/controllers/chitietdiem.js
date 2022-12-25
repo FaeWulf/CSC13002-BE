@@ -57,7 +57,7 @@ module.exports = {
       result = Math.round((result + Number.EPSILON) * 100) / 100 //round up to 2 decimal
 
       //uppdate diemtk
-      const rs = await db.query('UPDATE diemtk SET DIEMTK=$1 WHERE MADIEMTK=$2',
+      await db.query('UPDATE diemtk SET DIEMTK=$1 WHERE MADIEMTK=$2',
         [result, String(MADIEMKT)]
       )
 
