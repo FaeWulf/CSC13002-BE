@@ -3,11 +3,11 @@ const pgp = require('pg-promise')(initOptions)
 
 const cn = (
   {
-    host: process.env.DB_HOST || 'db.faewulf.xyz',
-    user: process.env.DB_USER || 'postgres',
-    port: process.env.DB_PORT || 2204,
-    password: 'youshallnotpass',
-    database: 'postgres',
+    host: process.env.db_host,
+    user: process.env.db_user,
+    port: process.env.db_port,
+    password: process.env.db_password,
+    database: process.env.db_database,
     max: 30
   }
 );

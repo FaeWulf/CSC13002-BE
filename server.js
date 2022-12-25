@@ -1,6 +1,8 @@
+require('dotenv').config()
 const express = require('express')
 const fs = require('fs')
 const cors = require('cors')
+
 
 //config
 let port = process.env.PORT || 3000
@@ -25,7 +27,7 @@ fs.readdirSync(routesPath).forEach(E => {
 })
 
 
-app.listen(port)
+app.listen(process.env.port || 3000)
 
 
 
