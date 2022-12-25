@@ -16,6 +16,11 @@ module.exports = {
       const rs = await db.one('INSERT INTO hocsinh(MAHS, HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *',
         [String(MAHS), HOTEN, GIOITINH, NGAYSINH, DIACHI, EMAIL, MALOP]
       )
+
+      //update siso lop
+      const size = await db.oneOrNone(`SELECT COUNT(*) FROM hocsinh WHERE malop=$1`, [MALOP])
+      await db.query('update lop set siso=$1 where malop=$2', [size?.count, MALOP])
+
       return rs
     }
     catch (err) {
@@ -49,6 +54,13 @@ module.exports = {
 
     try {
       await db.none(update + ' WHERE MAHS=$1', String(MAHS));
+
+      //update siso lop
+      if (MALOP) {
+        const size = await db.oneOrNone(`SELECT COUNT(*) FROM hocsinh WHERE malop=$1`, [MALOP])
+        await db.query('update lop set siso=$1 where malop=$2', [size?.count, MALOP])
+      }
+
       return { status: "done" }
     } catch (err) {
       console.log("[db hocsinh] ", err)

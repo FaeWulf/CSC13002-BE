@@ -13,7 +13,7 @@ async function temp() {
 
   for (let i = 0; i < lops.length; i++) {
     const size = await db.oneOrNone(`SELECT COUNT(*) FROM hocsinh WHERE malop=$1`, [lops[i].malop])
-    console.log(lops[i].malop, size)
+    await db.query('update lop set siso=$1 where malop=$2', [size.count, lops[i].malop])
   }
 }
 temp()
